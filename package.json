@@ -1,0 +1,15 @@
+{
+  "name": "spoken-dna-workshop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "口播 DNA 工坊：本地视频转写、表达 DNA 分析与口述成稿",
+  "scripts": {
+    "test:browser": "node tests/browser.cjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "playwright-core": "1.58.2"
+  }
+}

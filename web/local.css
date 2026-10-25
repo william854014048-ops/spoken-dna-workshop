@@ -1,0 +1,28 @@
+/* 沿用原页面的颜色、卡片和双栏，只扩展配置与素材导入。 */
+.local-config{margin-top:20px;padding-top:18px;border-top:1px solid var(--border-light)}
+.local-config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.local-config small{color:var(--text-secondary);font-size:12px;line-height:1.7}
+.local-config .local-source{margin-top:6px;color:var(--primary)}
+.local-config .local-remember{display:flex;align-items:center;gap:7px;font-size:13px;margin:14px 0}
+.import-modes{display:flex;gap:8px;margin-bottom:14px}
+.import-modes button[aria-pressed="true"]{color:var(--primary);border-color:var(--primary);background:var(--primary-light)}
+.link-notice{font-size:12px;color:var(--text-secondary);line-height:1.8;margin:8px 0 12px}
+.link-summary{min-height:24px;color:var(--primary);font-size:12px;margin-top:12px}
+.link-queue{display:grid;gap:10px;margin-top:10px;max-height:650px;overflow:auto}
+.link-job{border:1px solid var(--border-light);border-radius:var(--radius);padding:13px;background:var(--bg)}
+.link-job-header{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.link-job-header strong{font-size:13px;overflow-wrap:anywhere}
+.link-status{font-size:11px;white-space:nowrap;background:var(--primary-light);color:var(--primary);border-radius:12px;padding:2px 8px}
+.link-job[data-status="failed"] .link-status{background:var(--accent-light);color:var(--danger)}
+.link-job[data-status="success"] .link-status{color:var(--success)}
+.link-source{font-size:11px;overflow-wrap:anywhere;color:var(--text-secondary);display:block;margin:6px 0}
+.link-detail{font-size:12px;line-height:1.7;color:var(--text-secondary);margin:7px 0}
+.link-editor summary{font-size:12px}
+.link-editor input{width:100%;border:1px solid var(--border);padding:8px;margin:10px 0;border-radius:var(--radius);font:inherit;font-size:13px;background:var(--bg-card)}
+.link-editor textarea{min-height:180px;font-size:13px;background:var(--bg-card)}
+.link-original{font-size:12px;white-space:pre-wrap;max-height:180px;overflow:auto;margin:10px 0}
+.article-item .article-source{font-size:11px;color:var(--primary);margin-top:4px;overflow-wrap:anywhere}
+.article-edit{margin-left:8px;flex-shrink:0}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+[hidden]{display:none!important}
+@media(max-width:760px){.local-config-grid{grid-template-columns:1fr}.api-panel{padding:16px}.link-job-header{align-items:flex-start}}

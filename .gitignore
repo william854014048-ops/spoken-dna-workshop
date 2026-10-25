@@ -1,0 +1,20 @@
+data/
+runtime/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+node_modules/
+*.log
+*.dpapi
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+# 本机历史交付与真人转写截图不属于公共源码。
+/使用说明.md
+/docs/验证记录.md
+/docs/交付核验.json
+/docs/真实转写结果.png
+/docs/浏览器验证.json

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>口述成稿 · DNA 工坊 · 结构匹配版</title>
+<link rel="stylesheet" href="/local.css">
+<link rel="stylesheet" href="/workshop.css">
+</head>
+<body>
+
+<!-- ===== 顶部栏 ===== -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="logo-mark">DNA</div>
+    <div>
+      <div class="app-title">口述成稿 · DNA 工坊</div>
+      <div class="app-subtitle">用你自己的经历，写出你喜欢的表达</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="api-status" id="apiStatus">
+      <span class="dot"></span>
+      <span id="apiStatusText">未配置 API</span>
+    </div>
+    <button class="btn-icon" id="toggleApiPanel" title="API 配置">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ===== API 配置面板 ===== -->
+<div class="api-panel" id="apiPanel">
+  <div class="api-grid">
+    <div class="form-group">
+      <label>API Key</label>
+      <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>API Base URL</label>
+      <input type="text" id="apiBase" placeholder="https://api.deepseek.com/v1">
+    </div>
+    <div class="form-group">
+      <label>模型名称</label>
+      <select id="apiModel" style="height:38px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-sans);font-size:13px;background:var(--bg);color:var(--text);cursor:pointer;">
+        <option value="deepseek-chat">deepseek-chat（推荐）</option>
+        <option value="deepseek-v4-pro">deepseek-v4-pro（推理增强）</option>
+        <option value="deepseek-v4-flash">deepseek-v4-flash</option>
+        <option value="custom">自定义（在下方输入）</option>
+      </select>
+      <input type="text" id="apiModelCustom" placeholder="输入模型名或接入点ID ep-xxx" style="display:none;margin-top:6px;height:34px;font-size:12px;" autocomplete="off">
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-outline btn-sm" id="testApiBtn">测试连接</button>
+      <button class="btn btn-primary btn-sm" id="saveApiBtn">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Tab 导航 ===== -->
+<nav class="tab-nav">
+  <div class="tab-item active" data-tab="distill">
+    <span class="tab-num">01</span>
+    建立 DNA
+  </div>
+  <div class="tab-item" data-tab="deai">
+    <span class="tab-num">02</span>
+    去 AI 味
+  </div>
+  <div class="tab-item" data-tab="write">
+    <span class="tab-num">03</span>
+    口述成稿
+  </div>
+</nav>
+
+<!-- ===== 主内容 ===== -->
+<main class="main">
+
+  <!-- ===== Tab 1: 蒸馏 ===== -->
+  <div class="tab-content active" id="tab-distill">
+    <div class="distill-layout">
+      <!-- 左：文章输入 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="level-tag">INPUT</span>
+            文章语料
+          </div>
+        </div>
+        <textarea class="article-input-area" id="batchInput" placeholder="在此粘贴文章，多篇文章用 --- 分隔..."></textarea>
+        <div class="article-input-hint">
+          多篇文章用 <code>---</code> 分隔。也可以点击「逐篇添加」逐篇录入。建议至少 20 篇完整文章。
+        </div>
+        <div class="input-actions">
+          <button class="btn btn-outline btn-sm" id="importBatchBtn">批量导入</button>
+          <button class="btn btn-outline btn-sm" id="addSingleBtn">逐篇添加</button>
+          <button class="btn btn-outline btn-sm" id="clearArticlesBtn" style="margin-left:auto;color:var(--danger);border-color:var(--danger);">清空全部</button>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" id="articleProgress"></div>
+          </div>
+          <div class="progress-text">
+            <span id="articleCountText">0 篇文章</span>
+            <span>目标 20 篇（最少 5 篇）</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右：文章列表 + 配置 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="level-tag">QUEUE</span>
+            已添加文章
+          </div>
+        </div>
+        <div class="article-list" id="articleList">
+          <div class="article-list-empty">尚未添加文章</div>
+        </div>
+
+        <div class="distill-config">
+          <div class="form-group">
+            <label>作者 / 账号名称</label>
+            <input type="text" id="authorName" placeholder="如：参考博主 A">
+          </div>
+          <div class="form-group">
+            <label>产物语言</label>
+            <select id="outputLang">
+              <option value="auto">自动判断</option>
+              <option value="zh">中文</option>
+              <option value="en">英文</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="distill-action-bar">
+          <button class="btn btn-primary" id="startDistillBtn" disabled>开始蒸馏</button>
+          <span id="distillHint" style="font-size:12px;color:var(--text-muted);">至少添加 5 篇文章</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 蒸馏进度 -->
+    <div class="card" id="distillProgressCard" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="level-tag">RUNNING</span>
+          蒸馏进行中
+        </div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="distillProgressBar" style="width:0%;"></div>
+      </div>
+      <div class="progress-step" id="distillStepText">
+        <span class="spinner"></span>
+        <span>准备中...</span>
+      </div>
+    </div>
+
+    <!-- 结果区 -->
+    <div class="card" id="resultCard" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="level-tag">OUTPUT</span>
+          蒸馏产物
+        </div>
+        <div class="result-actions" style="margin-top:0;">
+          <button class="btn btn-outline btn-sm" id="copyResultBtn">复制当前</button>
+          <button class="btn btn-accent btn-sm" id="exportAllBtn">导出全部 .md</button>
+        </div>
+      </div>
+      <div class="result-tabs" id="resultTabs">
+        <div class="result-tab active" data-result="dna">Writing-DNA.md</div>
+        <div class="result-tab" data-result="l1">L1 语言 DNA</div>
+        <div class="result-tab" data-result="l2">L2 文章结构</div>
+        <div class="result-tab" data-result="l35">L3-L5 认知框架</div>
+        <div class="result-tab" data-result="l6">L6 视觉风格</div>
+      </div>
+      <div class="result-content active" id="result-dna">
+        <div class="result-text" id="resultText-dna"></div>
+      </div>
+      <div class="result-content" id="result-l1">
+        <div class="result-text" id="resultText-l1"></div>
+      </div>
+      <div class="result-content" id="result-l2">
+        <div class="result-text" id="resultText-l2"></div>
+      </div>
+      <div class="result-content" id="result-l35">
+        <div class="result-text" id="resultText-l35"></div>
+      </div>
+      <div class="result-content" id="result-l6">
+        <div class="result-text" id="resultText-l6"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Tab 2: 去 AI 味 ===== -->
+  <div class="tab-content" id="tab-deai">
+    <div class="card">
+      <div class="deai-controls">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div class="toggle-wrap" id="strictToggleWrap">
+            <div class="toggle on" id="strictToggle"></div>
+            <span>严格模式（最小改动）</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span id="deaiWordCount" style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono);">0 字</span>
+          <button class="btn btn-primary btn-sm" id="startDeaiBtn" disabled>开始清理</button>
+        </div>
+      </div>
+
+      <div class="deai-layout">
+        <div class="deai-panel">
+          <div class="deai-panel-header">
+            <div class="deai-panel-title">
+              原文
+              <span class="badge">INPUT</span>
+            </div>
+            <button class="btn btn-outline btn-sm" id="clearDeaiInputBtn">清空</button>
+          </div>
+          <textarea class="deai-textarea" id="deaiInput" placeholder="在此粘贴需要去 AI 味的文案..."></textarea>
+        </div>
+        <div class="deai-panel">
+          <div class="deai-panel-header">
+            <div class="deai-panel-title">
+              改写结果
+              <span class="badge">OUTPUT</span>
+            </div>
+            <button class="btn btn-outline btn-sm" id="copyDeaiBtn" disabled>复制</button>
+          </div>
+          <div class="deai-output empty" id="deaiOutput">清理结果将显示在这里</div>
+        </div>
+      </div>
+
+      <!-- 改动统计 -->
+      <div class="stats-panel" id="deaiStatsPanel" style="display:none;">
+        <div class="stats-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+          命中规则统计
+        </div>
+        <div class="stats-grid" id="deaiStatsGrid"></div>
+      </div>
+
+      <!-- 规则说明 -->
+      <div class="rules-toggle" id="rulesToggle">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="rulesArrow"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        查看完整 11 条去 AI 味规则
+      </div>
+      <div class="rules-panel" id="rulesPanel">
+        <div class="rule-item">
+          <span class="rule-num">01</span><span class="rule-name">翻案腔</span>
+          <div class="rule-desc">"不是…而是…""你以为…其实…""说到底""答案恰恰相反"等先立误解再推翻的句式。改为直接正面下判断。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">02</span><span class="rule-name">顿号罗列过密</span>
+          <div class="rule-desc">一个分句内两个以上顿号连起三项并列。能概括就概括，必须保留时改变其中一项句法。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">03</span><span class="rule-name">相邻句结构同款</span>
+          <div class="rule-desc">相邻两句逗号数、成分顺序、长度接近，像填表。打散其中一句句法（合并/拆分/换语序）。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">04</span><span class="rule-name">破折号滥用</span>
+          <div class="rule-desc">破折号制造停顿揭晓或插入不必要补充。改为完整句或逗号/句号。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">05</span><span class="rule-name">提示性冒号</span>
+          <div class="rule-desc">"一句话总结：""核心是：""关键在于：""原因如下："等提示语。删掉提示语直接写内容。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">06</span><span class="rule-name">序数词当小标题</span>
+          <div class="rule-desc">小标题以"一、二、三"或"第一、第二"编号且连续三个以上。删掉编号保留小标题文字。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">07</span><span class="rule-name">拟人化喻体</span>
+          <div class="rule-desc">"像一位智慧的导师""永不疲倦的审查员"等理想化职业人格+褒义修饰。改为实际功能描述。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">08</span><span class="rule-name">具体数据被概括覆盖</span>
+          <div class="rule-desc">用"显著提升""大幅增长"等概括词但同段已有具体数值。把已有具体值提上来，无数据时只恢复动词。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">09</span><span class="rule-name">禁用起手式</span>
+          <div class="rule-desc">"说白了""说穿了""先说结论"。删掉后直接给判断。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">10</span><span class="rule-name">翻译腔（仅五种）</span>
+          <div class="rule-desc">过长前置定语、"当…时"前置从句、"对于…来说"前置话题壳、句首"然而/因此/此外"当路标、"这意味着/这表明"式复述句。</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">11</span><span class="rule-name">段首零主语评论</span>
+          <div class="rule-desc">非首段以评论语开头且无回指成分。补回指词（通常加"这"字）或点明对象。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ===== Tab 3: 按 DNA 写作 ===== -->
+  <div class="tab-content" id="tab-write">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="level-tag">DNA</span>
+          写作风格来源
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline btn-sm" id="loadCurrentDnaBtn">加载当前蒸馏结果</button>
+          <button class="btn btn-outline btn-sm" id="clearDnaBtn">清空</button>
+        </div>
+      </div>
+      <div class="article-input-hint" style="margin-bottom:12px;">
+        粘贴一份 Writing-DNA.md（或从蒸馏 Tab 加载当前结果），程序会按这份风格写新文章。复刻的是写法，不是原文内容。
+      </div>
+      <textarea class="article-input-area" id="dnaInput" placeholder="在此粘贴 Writing-DNA.md 内容，或点上方「加载当前蒸馏结果」..." style="min-height:120px;"></textarea>
+      <div id="dnaLoadedHint" style="display:none;margin-top:8px;font-size:12px;color:var(--success);">✓ 已加载写作 DNA</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="level-tag">REQ</span>
+          写作需求
+        </div>
+      </div>
+      <div class="distill-config">
+        <div class="form-group">
+          <label>文章主题</label>
+          <input type="text" id="writeTopic" placeholder="如：AI 时代的内容创作趋势">
+        </div>
+        <div class="form-group">
+          <label>内容类型</label>
+          <select id="writeType">
+            <option value="小红书笔记" selected>小红书笔记</option>
+            <option value="种草笔记">种草笔记</option>
+            <option value="测评笔记">测评笔记</option>
+            <option value="干货分享">干货分享</option>
+            <option value="生活记录">生活记录</option>
+            <option value="深度分析">深度分析</option>
+            <option value="短评">短评</option>
+            <option value="自由">自由发挥</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>目标字数</label>
+          <select id="writeLength">
+            <option value="300">超短笔记（约 300 字）</option>
+            <option value="500" selected>标准笔记（约 500 字）</option>
+            <option value="800">长笔记（约 800 字）</option>
+            <option value="1500">深度长文（约 1500 字）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>发布平台</label>
+          <input type="text" id="writePlatform" placeholder="如：小红书 / 公众号 / 知乎（可选）" value="小红书">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px;">
+        <label>补充要求（可选）</label>
+        <textarea class="article-input-area" id="writeExtra" placeholder="如：需要引用某个案例、采用某个切入角度、避免某些话题..." style="min-height:80px;"></textarea>
+      </div>
+      <div class="distill-action-bar">
+        <button class="btn btn-primary" id="startWriteBtn" disabled>开始写作</button>
+        <span id="writeHint" style="font-size:12px;color:var(--text-muted);">请先加载写作 DNA 并填写主题</span>
+      </div>
+    </div>
+
+    <!-- 写作进度 -->
+    <div class="card" id="writeProgressCard" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="level-tag">WRITING</span>
+          写作进行中
+        </div>
+      </div>
+      <div class="progress-step" id="writeStepText">
+        <span class="spinner"></span>
+        <span>正在按 DNA 风格生成文章...</span>
+      </div>
+    </div>
+
+    <!-- 写作结果 -->
+    <div class="card" id="writeResultCard" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="level-tag">OUTPUT</span>
+          生成文章
+        </div>
+        <div class="result-actions" style="margin-top:0;">
+          <button class="btn btn-outline btn-sm" id="copyWriteBtn">复制全文</button>
+          <button class="btn btn-accent btn-sm" id="exportWriteBtn">导出 .md</button>
+        </div>
+      </div>
+      <div class="result-text" id="writeResultText" style="max-height:800px;"></div>
+      <div style="margin-top:14px;font-size:12px;color:var(--text-muted);">
+        提示：复刻的是写作风格（语言、结构、视角），不会照搬原文的观点和事实。如需调整可修改需求后重新生成。
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== 逐篇添加模态框 ===== -->
+<div class="modal-overlay" id="addArticleModal">
+  <div class="modal">
+    <div class="modal-title">逐篇添加文章</div>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label>文章标题</label>
+      <input type="text" id="singleTitle" placeholder="文章标题">
+    </div>
+    <div class="form-group">
+      <label>文章正文</label>
+      <textarea class="article-input-area" id="singleContent" placeholder="粘贴文章正文..." style="min-height:200px;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" id="cancelAddBtn">取消</button>
+      <button class="btn btn-primary btn-sm" id="confirmAddBtn">添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Toast 容器 ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="/workshop-core.js"></script>
+<script src="/spoken-workshop.js"></script>
+<script src="/expression-profile.js"></script>
+<script src="/local.js"></script>
+</body>
+</html>
