@@ -1,0 +1,137 @@
+/* 张学友液态玻璃风格：只覆盖视觉属性，沿用原工作台 DOM、布局、文案与业务逻辑。 */
+:root{
+  --bg:#f3f6fc;
+  --bg-card:rgba(255,255,255,.74);
+  --bg-subtle:rgba(225,234,249,.64);
+  --text:#1d2c43;
+  --text-secondary:#526580;
+  --text-muted:#6b7d96;
+  --primary:#0867df;
+  --primary-hover:#0553bb;
+  --primary-light:rgba(224,237,255,.74);
+  --accent:#5078d7;
+  --accent-light:rgba(239,235,255,.8);
+  --border:rgba(150,174,210,.38);
+  --border-light:rgba(163,184,216,.27);
+  --danger:#b74354;
+  --success:#247d69;
+  --radius:12px;
+  --radius-lg:22px;
+  --shadow-sm:0 4px 18px rgba(43,73,121,.045),inset 0 1px 0 rgba(255,255,255,.95);
+  --shadow-md:0 12px 36px rgba(43,73,121,.1),inset 0 1px 0 rgba(255,255,255,.98);
+}
+body{
+  background:radial-gradient(ellipse at 0% 0%,rgba(184,215,255,.66),transparent 43%),
+    radial-gradient(ellipse at 100% 20%,rgba(221,207,253,.42),transparent 46%),
+    radial-gradient(ellipse at 20% 95%,rgba(191,232,224,.35),transparent 42%),#f3f6fc;
+  background-attachment:fixed;
+}
+.topbar{
+  background:linear-gradient(120deg,rgba(255,255,255,.82),rgba(246,250,255,.59));
+  border-bottom-color:rgba(255,255,255,.9);
+  box-shadow:0 3px 24px rgba(41,76,128,.045),inset 0 -1px 0 rgba(149,178,218,.18);
+  -webkit-backdrop-filter:blur(26px) saturate(155%);
+  backdrop-filter:blur(26px) saturate(155%);
+}
+.logo-mark{
+  border-radius:12px;
+  background:linear-gradient(145deg,#439dff,#0561dc);
+  box-shadow:inset 0 1px 0 #ffffff88,inset 0 -1px 0 #0042a744,0 4px 14px #0966df2b;
+}
+.dna-sidebar{
+  background:linear-gradient(160deg,rgba(255,255,255,.7),rgba(244,249,255,.46));
+  border-right-color:rgba(255,255,255,.9);
+  box-shadow:inset -1px 0 0 rgba(147,173,211,.16);
+  -webkit-backdrop-filter:blur(28px) saturate(145%);
+  backdrop-filter:blur(28px) saturate(145%);
+}
+.card,.version-panel{
+  background:linear-gradient(132deg,rgba(255,255,255,.88),rgba(255,255,255,.62));
+  border-color:rgba(255,255,255,.92);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.97),inset 0 -1px 0 rgba(157,179,212,.16),0 6px 28px rgba(52,78,121,.055);
+}
+.card{-webkit-backdrop-filter:blur(18px) saturate(135%);backdrop-filter:blur(18px) saturate(135%)}
+.draft-context,.v2-panel,.flow-comparison,.build-guide,.composition-slot,.link-bulk-toolbar{
+  background:linear-gradient(125deg,rgba(235,244,255,.86),rgba(248,248,255,.58));
+  border-color:rgba(173,197,232,.35);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 3px 12px rgba(64,97,144,.025);
+}
+.composition-slot{border-radius:12px}
+.workspace-process span{
+  background:linear-gradient(150deg,rgba(255,255,255,.94),rgba(235,244,255,.72));
+  border-color:rgba(255,255,255,.95);
+  box-shadow:inset 0 1px 0 #fff,0 3px 12px #416da514;
+}
+.btn,.btn-icon{
+  background:linear-gradient(155deg,rgba(255,255,255,.92),rgba(235,243,255,.62));
+  border-color:rgba(152,182,223,.4);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 2px 6px rgba(43,83,142,.035);
+  color:#305d99;
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+}
+.btn:hover,.btn-icon:hover{background:linear-gradient(155deg,#ffffffee,#e6f0ffdb);border-color:rgba(92,149,229,.64);box-shadow:inset 0 1px 0 #fff,0 4px 14px #317bd417}
+.btn-primary,.btn-accent{
+  background:linear-gradient(165deg,#3d92fb,#0763e5);
+  color:#fff;
+  border-color:rgba(47,118,217,.7);
+  box-shadow:inset 0 1px 0 #ffffff73,inset 0 -1px 0 #0345a54d,0 4px 13px #0867df26;
+}
+.btn-primary:hover,.btn-accent:hover{background:linear-gradient(165deg,#2d86f6,#075cd5);color:#fff;border-color:#0960d4}
+.btn:disabled{background:rgba(225,232,243,.7);border-color:rgba(187,202,223,.38);color:#71829b;box-shadow:inset 0 1px 0 #ffffffa8}
+.dna-choice{
+  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(240,247,255,.57));
+  border-color:rgba(153,182,222,.32);
+  border-radius:15px;
+  box-shadow:inset 0 1px 0 #ffffffeb;
+}
+.dna-choice.selected{background:linear-gradient(135deg,#edf5ffeb,#e1edffad);border-color:#7daff0;box-shadow:inset 0 1px 0 #fff,0 3px 12px #3779d014}
+input:not([type=checkbox]):not([type=radio]),textarea,select,.spoken-input,.article-input-area{
+  background:linear-gradient(145deg,rgba(242,247,255,.83),rgba(247,249,255,.74));
+  border-color:rgba(157,181,218,.34);
+  color:var(--text);
+  box-shadow:inset 0 1px 2px rgba(89,121,166,.025),0 1px 0 rgba(255,255,255,.8);
+}
+input::placeholder,textarea::placeholder{color:#7085a2}
+input:focus,textarea:focus,select:focus{border-color:#78aaf0;box-shadow:0 0 0 3px #1478ff10,inset 0 1px 0 #ffffffc7}
+.version-heading{background:linear-gradient(120deg,#f2f7ffdc,#f8faffb3);border-bottom-color:#d4e1f255}
+.version-body,.version-panel .output-paper,.version-panel .deai-output{background:rgba(255,255,255,.31)}
+.link-job,.article-item,.link-history{
+  background:linear-gradient(145deg,#ffffffbd,#f1f7ffc4);
+  border-color:rgba(165,188,221,.27);
+  border-radius:12px;
+  box-shadow:inset 0 1px 0 #fff;
+}
+.link-status{background:#e7effc;color:#45638e}
+.link-job[data-status=success] .link-status{background:#e0f0e9;color:#276e5a}
+.link-job[data-status=failed] .link-status{background:#fbe8ed;color:#a63c55}
+.notice{background:linear-gradient(130deg,#fff8eddd,#fff3e6a6);color:#815c30}
+.api-status{background:#eaf0f8b8;color:#637b9d}
+.api-status.configured{background:#e1f0edbd;color:#2e7b69;box-shadow:inset 0 1px 0 #ffffffb3}
+.toggle{background:#c9d7eb;box-shadow:inset 0 1px 3px #4f6f9833}
+.toggle.on{background:linear-gradient(140deg,#55b6a1,#2b927c)}
+.toggle::after{box-shadow:0 1px 4px #0c405b33,inset 0 1px 0 #fff}
+.progress-bar-wrap{background:#dfe9f57a;box-shadow:inset 0 1px 2px #2a507b0b}
+.progress-bar{background:linear-gradient(90deg,#68b3ff,#126be3)}
+.level-tag{background:linear-gradient(135deg,#3a8bed,#0762d7)}
+.dna-builder-dialog,.config-dialog{
+  background:linear-gradient(135deg,rgba(249,252,255,.94),rgba(237,244,255,.88));
+  border-color:rgba(255,255,255,.98);
+  border-radius:24px;
+  box-shadow:inset 0 1px 0 #fff,0 28px 100px #213f7638,0 5px 20px #23457914;
+  -webkit-backdrop-filter:blur(32px) saturate(155%);
+  backdrop-filter:blur(32px) saturate(155%);
+}
+.dna-builder-dialog::backdrop,.config-dialog::backdrop{background:#243b6555;backdrop-filter:blur(9px) saturate(85%)}
+.builder-heading,.builder-footer,.settings-heading,.settings-footer{background:linear-gradient(125deg,#fffffff0,#f4f9ffbc);border-color:rgba(185,205,232,.36)}
+.modal{background:linear-gradient(135deg,#fffffff5,#f1f7fff2);border-color:#ffffffed;border-radius:20px;box-shadow:inset 0 1px 0 #fff,0 20px 75px #2e518144}
+.modal-overlay{background:#233d6255;backdrop-filter:blur(7px)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #6ba8f1;outline-offset:3px}
+@supports not (backdrop-filter:blur(1px)){
+  .card,.dna-sidebar,.topbar,.version-panel{background:#f8fbff}
+  .dna-builder-dialog,.config-dialog{background:#f3f7ff}
+}
+@media(forced-colors:active){
+  body,.card,.dna-sidebar,.topbar,.version-panel,.dna-builder-dialog,.config-dialog{background:Canvas;box-shadow:none;backdrop-filter:none;color:CanvasText}
+  .btn,.btn-icon,.dna-choice,.composition-slot{border-color:ButtonText;box-shadow:none}
+}
