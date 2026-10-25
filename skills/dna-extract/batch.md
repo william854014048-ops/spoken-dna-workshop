@@ -1,0 +1,1 @@
+逐篇分析，返回 {"articles":[{"id":"给定ID","types":["story"],"tags":["主题词"],"summary":"仅描述讲法，不提炼作者立场","rules":[{"text":"表达规则","types":["story"],"condition":"适用条件","evidence":[{"articleId":"给定ID","quote":"逐字原文"}]}],"structures":[{"name":"结构名","types":["story"],"steps":["步骤"],"condition":"适用条件","evidence":[{"articleId":"给定ID","quote":"逐字原文"}],"rules":[]}]}]}。每篇必须有记录；不确定就用unknown。

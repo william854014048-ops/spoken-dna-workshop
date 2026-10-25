@@ -1,0 +1,1 @@
+根据逐篇记录合并共同语言和细节组织规则、结构。不要将出现一次的写法说成稳定习惯。只引用下方证据里的逐字quote及对应articleId。返回 {"rules":[{"text":"规则","types":[],"condition":"适用条件","evidence":[{"articleId":"ID","quote":"原文"}]}],"structures":[{"name":"结构名","types":["story"],"steps":["步骤"],"condition":"适用条件","evidence":[{"articleId":"ID","quote":"原文"}],"rules":[]}],"limitations":["材料限制"]}。types为空的规则表示共同表达习惯，不代表任何认知立场。

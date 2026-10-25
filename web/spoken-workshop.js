@@ -55,7 +55,7 @@ $('tab-write').innerHTML = `
 
 const DEMO = { id: 'demo-story', name: '示例 · 克制叙事', demo: true, text: '先呈现事实中的矛盾，再交代具体经过和代价，随后表达用户已说出的感受。短句为主，语气克制，不替用户升华，不添加用户没有说过的判断。不编造对话或细节。', raw: [], results: {} };
 function selectedDna() { return app.library.find(x => x.id === app.selected) || (app.selected === DEMO.id ? DEMO : null); }
-function activate(tab) { document.querySelector('[data-tab="' + tab + '"]').click(); }
+function activate(tab) { if(window.dnaFlow?.navigate)return window.dnaFlow.navigate(tab);document.querySelector('[data-tab="' + tab + '"]').click(); }
 function persist() { app.spoken = $('spokenInput').value; app.duration = $('spokenDuration').value; app.supplements = $('supplementInput').value; app.draftDna = $('importDnaText').value; app.author = $('authorName').value; saveConfig(); }
 function download(name, data, type) { const url = URL.createObjectURL(new Blob([data], {type: type || 'text/plain;charset=utf-8'})); const a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
 function renderLibrary() {
@@ -66,9 +66,16 @@ function renderLibrary() {
   const info = $('selectedDnaInfo'); info.replaceChildren(); const dna = selectedDna();
   if (dna) { const details = document.createElement('details'); details.style.marginTop = '15px'; const summary = document.createElement('summary'); summary.textContent = '查看所选 DNA'; const pre = document.createElement('pre'); pre.textContent = dna.text; details.append(summary, pre); info.append(details); }
 }
-function addDna(name, text, results, raw) { const dna = {id: 'dna-' + Date.now(), name, text, results: structuredClone(results || {}), raw: structuredClone(raw || [])}; app.library.push(dna); app.selected = dna.id; persist(); renderLibrary(); activate('write'); showToast('已保存，可以用自己的口述生成文案', 'success'); }
-$('saveLibraryDna').onclick = () => { if (!state.distillResults.dna) return showToast('请先完成 DNA 分析', 'error'); addDna($('dnaLibraryName').value.trim() || $('authorName').value.trim() || '我的参考 DNA', state.distillResults.dna, state.distillResults, state.articles); };
-$('importDnaBtn').onclick = () => { const text = $('importDnaText').value.trim(); if (!text) return showToast('请粘贴 DNA 文档', 'error'); addDna($('importDnaName').value.trim() || '导入的 DNA', text); };
+async function addDna(name, text, results, raw, expressionProfile) {
+  const dna = {id:'dna-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name,text,results:structuredClone(results||{}),raw:structuredClone(raw||[]),...(window.dnaFlow?.metadata()||{})};
+  if(expressionProfile)dna.expressionProfile=structuredClone(expressionProfile);
+  if(!window.dnaDisk)throw new Error('DNA 本地目录模块尚未就绪，请刷新页面。');
+  await window.dnaDisk.save(dna);
+  app.library.push(dna);app.selected=dna.id;if(window.dnaFlow)window.dnaFlow.selectWhole(dna);persist();renderLibrary();activate('write');
+  window.dnaFlow?.dnaSaved(dna);showToast('DNA 已保存到本地目录，可以用自己的口述生成文案','success');return dna;
+}
+$('saveLibraryDna').onclick = async () => { if (!state.distillResults.dna) return showToast('请先完成 DNA 分析', 'error'); try{await addDna($('dnaLibraryName').value.trim() || $('authorName').value.trim() || '我的参考 DNA', state.distillResults.dna, state.distillResults, state.articles);}catch(e){showToast(e.message,'error');} };
+$('importDnaBtn').onclick = async () => { const text = $('importDnaText').value.trim(); if (!text) return showToast('请粘贴 DNA 文档', 'error'); const btn=$('importDnaBtn');btn.disabled=true;try{await addDna($('importDnaName').value.trim() || '导入的 DNA', text);}catch(e){showToast(e.message,'error');}finally{btn.disabled=false;} };
 $('goBuildDna').onclick = () => activate('distill');
 $('spokenInput').value = app.spoken; $('spokenDuration').value = app.duration; $('supplementInput').value = app.supplements; $('authorName').value = app.author; $('importDnaText').value = app.draftDna;
 ['spokenInput','spokenDuration','supplementInput','importDnaText','authorName'].forEach(id => $(id).addEventListener('input', persist));
@@ -129,8 +136,11 @@ $('projectFile').onchange = async e => {
     if (data.version !== 1 || !data.app || !Array.isArray(data.app.library) || !Array.isArray(data.articles) || typeof data.app.spoken !== 'string' || typeof data.app.result !== 'string' || !Array.isArray(data.app.questions)) throw new Error('备份格式不正确');
     for (const d of data.app.library) if (typeof d.id !== 'string' || typeof d.name !== 'string' || typeof d.text !== 'string' || !Array.isArray(d.raw) || d.raw.some(a => typeof a.title !== 'string' || typeof a.content !== 'string')) throw new Error('DNA 数据不完整');
     if (data.articles.some(a => typeof a.title !== 'string' || typeof a.content !== 'string') || !data.distillResults || ['dna','l1','l2','l35','l6'].some(k => typeof data.distillResults[k] !== 'string')) throw new Error('分析数据不完整');
-    if (!confirm('恢复将替换当前项目。确定继续？')) return;
-    Object.assign(app, data.app); state.articles = data.articles; state.distillResults = data.distillResults; saveConfig(); location.reload();
+    if (!confirm('恢复将替换当前工作区，并合并 DNA 到已配置的本地目录；目录里其他 DNA 会保留。确定继续？')) return;
+    Object.assign(app, data.app); state.articles = data.articles; state.distillResults = data.distillResults;if(window.dnaFlow)window.dnaFlow.restoreInputs();saveConfig();
+    if(window.dnaDisk?.configured)await window.dnaDisk.flush();
+    if(window.dnaFlow)await window.dnaFlow.flush();
+    location.reload();
   } catch (err) { showToast('恢复失败：' + err.message, 'error'); } finally { e.target.value = ''; }
 };
 

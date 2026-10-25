@@ -21,6 +21,7 @@ class LocalTests(unittest.TestCase):
         (self.root / 'runtime/temp').mkdir(parents=True)
 
     def tearDown(self):
+        assert self.root.resolve().is_relative_to((ROOT / 'runtime').resolve())
         shutil.rmtree(self.root)
 
     def test_links(self):
@@ -85,6 +86,7 @@ class LocalTests(unittest.TestCase):
 
     def test_queue_retry_and_cleanup(self):
         c=s.Config(self.root,None);c.save({'asrKey':'test-a','parserToken':'test-p','remember':False})
+        c.settings.update(asrInterval=0,parserInterval=0)
         jobs=s.Jobs(self.root,c)
         calls={}; seen=[]
         def provider(url,body,key,name,*args):

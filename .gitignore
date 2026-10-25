@@ -18,3 +18,11 @@ Thumbs.db
 /docs/交付核验.json
 /docs/真实转写结果.png
 /docs/浏览器验证.json
+# 用户可以把 DNA 资料目录选在项目内；这些产物仍不得进入源码仓库。
+**/dna.json*
+**/Writing-DNA.md*
+**/原稿.json*
+**/credentials.dpapi*
+**/config.json.new
+**/config.json
+**/workbench.json*
